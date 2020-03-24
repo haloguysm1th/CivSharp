@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CivSharp.Core;
 using CivSharp.Interfaces;
 
-namespace CivSharp.Core
+namespace CivSharp.Interfaces
 {
     interface IUnit : IDrawable
     {

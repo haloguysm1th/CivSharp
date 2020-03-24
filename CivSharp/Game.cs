@@ -12,6 +12,7 @@ namespace CivSharp
 
     class Game
     {
+        #region Readonly Variables
 
         private static readonly int _screenWidth = 100;
         private static readonly int _screenHeight = 70;
@@ -29,17 +30,29 @@ namespace CivSharp
         private static readonly int _commandHeight = _commandButtonHeight + _commandHeight;
         private static readonly int _commandWidth = _commandButtonWidth;
 
-        private static readonly int _mapWidth = _screenWidth - _unitWidth;
-        private static readonly int _mapHeight = _screenHeight - _commandHeight;
+        //The render size for the map view
+        private static readonly int _mapRenderWidth = _screenWidth - _unitWidth;
+        private static readonly int _mapRenderHeight = _screenHeight - _commandHeight;
 
+        //The real size of the map
+        private static readonly int _mapWidth = 200;
+        private static readonly int _mapHeight = 140;
 
+        #endregion
+        #region Consoles
         private static RLConsole _mapConsole;
         private static RLConsole _commandConsole;
         private static RLConsole _unitConsole;
         private static RLRootConsole _rootConsole;
-
+        #endregion
+        #region Local variables
         private static World world;
+        private static Camera _camera;
+
         private static bool fullScreen = false;
+        private static int _cameraX = 0;
+        private static int _cameraY= 0;
+        #endregion
         static void Main(string[] args)
         {
             if (args.Length > 0)
@@ -65,27 +78,39 @@ namespace CivSharp
 
             _rootConsole = new RLRootConsole(settings);
 
-
             _mapConsole = new RLConsole(_mapWidth,_mapHeight);
             _commandConsole = new RLConsole(_commandWidth,_commandHeight);
             _unitConsole = new RLConsole(_unitWidth,_unitHeight);
 
-            var generator=  new WorldGenerator(_mapWidth,_mapHeight);
+            var generator=  new WorldGenerator(_mapWidth, _mapHeight);
             world = generator.GenerateWorld();
+
+            //Pass render height/width because we add them as offsets.
+            _camera = new Camera(world,0,0,_mapRenderWidth,_mapRenderHeight);
 
             _rootConsole.Update += OnRootConsoleUpdate;
             _rootConsole.Render += OnRootConsoleRender;
             _rootConsole.Run();
         }
+        #region Private Methodws
 
-        static int x = 0;
-        private static int y = 0;
-        private static int temp = 0;
+        private static void MoveCamera()
+        {
+            var cameraMove = _camera.Move(_rootConsole.Keyboard);
+            _cameraX = cameraMove.X;
+            _cameraY = cameraMove.Y;
+        }
+
+        #endregion
+
+        #region Rendering and Updating
         private static void OnRootConsoleUpdate(object sender, UpdateEventArgs e)
         {
             _commandConsole.Clear();
             _mapConsole.Clear();
             _unitConsole.Clear();
+
+            MoveCamera();
 
             _commandConsole.SetBackColor(0,0,_commandWidth,_commandHeight,RLColor.Cyan);
             _commandConsole.Print(1, 1, "Commands!",RLColor.White);
@@ -98,16 +123,20 @@ namespace CivSharp
 
         private static void OnRootConsoleRender(object sender, UpdateEventArgs e)
         {
+            //Draw the world
             world.Draw(_mapConsole);
 
-            RLConsole.Blit(_mapConsole,0,0,_mapWidth,_mapHeight,
+            //Put all the consoles into the rootConsole
+            RLConsole.Blit(_mapConsole,_cameraX,_cameraY,_mapRenderWidth,_mapRenderHeight,
                 _rootConsole,_unitWidth,_commandHeight);
             RLConsole.Blit(_unitConsole,0,0,_unitWidth,_unitHeight,
                 _rootConsole,0,0);
             RLConsole.Blit(_commandConsole,0,0,_commandWidth,_commandHeight,
                 _rootConsole,_unitWidth,0);
 
+            //Then render the root console (and thus all the other ones)
             _rootConsole.Draw();
         }
+        #endregion  
     }
 }
