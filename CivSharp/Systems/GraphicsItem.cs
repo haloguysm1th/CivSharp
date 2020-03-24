@@ -10,6 +10,7 @@ namespace CivSharp.Systems
     {
         Nothing = 0,
         Plains = 1,
-        Mountains = 2
+        Mountains = 2,
+        Ocean = 3
     }
 }

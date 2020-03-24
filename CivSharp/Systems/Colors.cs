@@ -16,6 +16,9 @@ namespace CivSharp.Systems
         public static RLColor RockPrimary = new RLColor(123,113,103);
         public static RLColor RockSecondary = new RLColor(201,197,193);
 
+        public static RLColor OceanPrimary = new RLColor(0,102,204);
+        public static RLColor OceanSecondary = new RLColor(0,51,102);
+
         //Units
     }
 }

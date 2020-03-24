@@ -29,6 +29,18 @@ namespace CivSharp.Core
             SetCellProperties(x,y,transparent,walkable,explored);
         }
 
+        public IEnumerable<Tile> GetTiles(IEnumerable<ICell> cells)
+        {
+            var tiles = new List<Tile>();
+            foreach (var cell in cells)
+            {
+                var tile = Tiles[cell.Y,cell.X];
+                tiles.Add(tile);
+            }
+
+            return tiles;
+        }
+
         public void Update()
         {
 
