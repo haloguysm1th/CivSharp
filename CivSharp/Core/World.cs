@@ -41,6 +41,70 @@ namespace CivSharp.Core
             return tiles;
         }
 
+        public IEnumerable<Tile> ConvertCellsToTiles(IEnumerable<ICell> cells)
+        {
+            var listOfTiles = new List<Tile>();
+            foreach (var c in cells)
+            {
+                var tile = Tiles[c.Y, c.X];
+                listOfTiles.Add(tile);
+            }
+
+            return listOfTiles;
+        }
+
+        public IEnumerable<Tile> GetTilesAlongLine(int xStart, int yStart, int xDestination, int yDestination)
+        {
+            var cells = GetCellsAlongLine(xStart, yStart, xDestination, yDestination);
+            return ConvertCellsToTiles(cells);
+        }
+
+        public IEnumerable<Tile> GetAllTiles()
+        {
+            var tiles = new List<Tile>();
+            foreach (var tile in Tiles)
+            {
+                tiles.Add(tile);
+            }
+
+            return tiles;
+        }
+
+        public IEnumerable<Tile> GetTilesInCircle(int xCenter, int yCenter, int radius)
+        {
+            var cells = GetCellsInCircle(xCenter, yCenter, radius);
+
+            return ConvertCellsToTiles(cells);
+        }
+
+        public IEnumerable<Tile> GetTilesInDiamond(int xCenter, int yCenter, int distance)
+        {
+            var cells = GetCellsInDiamond(xCenter, yCenter, distance);
+
+            return ConvertCellsToTiles(cells);
+        }
+
+        public IEnumerable<Tile> GetBorderTilesInSquare(int xCenter, int yCenter, int distance)
+        {
+            var cells = GetBorderCellsInSquare(xCenter, yCenter, distance);
+
+            return ConvertCellsToTiles(cells);
+        }
+
+        public IEnumerable<Tile> GetBorderTilesInCircle(int xCenter, int yCenter, int radius)
+        {
+            var cells = GetBorderCellsInCircle(xCenter, yCenter, radius);
+
+            return ConvertCellsToTiles(cells);
+        }
+
+        public IEnumerable<Tile> GetBorderTilesInDiamond(int xCenter, int yCenter, int distance)
+        {
+            var cells = GetBorderCellsInDiamond(xCenter, yCenter, distance);
+
+            return ConvertCellsToTiles(cells);
+        }
+
         public void Update()
         {
 

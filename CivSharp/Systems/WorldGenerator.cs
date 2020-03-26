@@ -20,6 +20,18 @@ namespace CivSharp.Systems
             _height = height;
             _world = new World();
         }
+        public void GenerateOceans()
+        {
+            var tiles = _world.GetTilesAlongLine(0, 0, _width, 0) as List<Tile>;
+            tiles.AddRange(_world.GetTilesAlongLine(0,_height, _width, _height));
+            tiles.AddRange(_world.GetTilesAlongLine(0,0,0,_height));
+            tiles.AddRange(_world.GetTilesAlongLine(_width,0,_width,_height));
+
+            foreach (var tile in tiles)
+            {
+                _world.Tiles[tile.Y,tile.X] = new Ocean(tile.X,tile.Y,tile.Cell);
+            }
+        }
 
         public World GenerateWorld()
         {
@@ -43,28 +55,7 @@ namespace CivSharp.Systems
                 }
             }
 
-            //Set all the edge tiles to water
-            var topCells = _world.GetCellsAlongLine(0, 0, _width-1, 0);
-            var bottomCells = _world.GetCellsAlongLine(0, _height, _width-1, _height-1);
-            var LeftCells = _world.GetCellsAlongLine(0, 0, 0, _height);
-            var RightCells = _world.GetCellsAlongLine(_width, 0, _width-1, _height-1);
-
-            var topTiles = _world.GetTiles(topCells);
-            var bottomTiles = _world.GetTiles(bottomCells);
-            var leftTiles = _world.GetTiles(LeftCells);
-            var rightTiles = _world.GetTiles(RightCells);
-
-            var tiles = new List<Tile>();
-            tiles.AddRange(topTiles);
-            tiles.AddRange(bottomTiles);
-            tiles.AddRange(leftTiles);
-            tiles.AddRange(rightTiles);
-
-            foreach (var t in tiles)
-            {
-                _world.Tiles[t.Y,t.X] = new Ocean(t.X,t.X,t.Cell);
-
-            }
+            GenerateOceans();
 
             return _world;
         }

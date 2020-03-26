@@ -71,6 +71,7 @@
     <Compile Include="Systems\GraphicsItem.cs" />
     <Compile Include="Systems\WorldGenerator.cs" />
     <Compile Include="Tiles\Mountain.cs" />
+    <Compile Include="Tiles\Ocean.cs" />
     <Compile Include="Tiles\Plains.cs" />
   </ItemGroup>
   <ItemGroup>
