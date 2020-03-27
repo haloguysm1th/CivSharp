@@ -88,7 +88,7 @@ namespace CivSharp
             var generator=  new WorldGenerator(_mapWidth, _mapHeight);
             world = generator.GenerateWorld();
 
-            _inputHandler = new InputHandler(_rootConsole.Keyboard,world,_unitConsole,
+            _inputHandler = new InputHandler(_rootConsole.Keyboard,world,
                 (_mapRenderWidth, _mapRenderHeight));
 
             //Pass render height/width because we add them as offsets.
@@ -104,10 +104,13 @@ namespace CivSharp
             _mapConsole.Clear();
             _unitConsole.Clear();
 
-            _inputHandler.Update(_unitConsole);
+            _inputHandler.Update();
 
             _commandConsole.SetBackColor(0,0,_commandWidth,_commandHeight,RLColor.Cyan);
             _commandConsole.Print(1, 1, "Commands!",RLColor.White);
+
+            _unitConsole.SetBackColor(0,0,_unitWidth,_unitHeight,RLColor.Magenta);
+            _unitConsole.Print(1, 1, "Units!",RLColor.White);
 
             world.Update();
         }
