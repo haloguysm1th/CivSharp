@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CivSharp.Core;
-using CivSharp.Core.Input;
 using Newtonsoft.Json;
 using RLNET;
 
@@ -22,9 +21,21 @@ namespace CivSharp.Systems
         CursorRight,
         CursorUp,
         CursorDown,
-        MoveToCursor,
         Enter,
         Esc
+    }
+
+    class InputEvent : EventArgs
+    {
+
+        public InputComands Command { get; }
+        public RLKey Key { get; }
+
+        public InputEvent(InputComands command, RLKey key)
+        {
+            Command = command;
+            Key = key;
+        }
     }
 
     class InputHandler
@@ -43,7 +54,6 @@ namespace CivSharp.Systems
             { "a",RLKey.A},
             { "d",RLKey.D},
             {"s",RLKey.S},
-            {"c",RLKey.C },
             {"left",RLKey.Left},
             {"right" ,RLKey.Right},
             {"up", RLKey.Up},
@@ -54,9 +64,8 @@ namespace CivSharp.Systems
 
         private  Camera _camera;
         private Cursor _cursor;
-        private MoveCameraToCursor _moveCamera;
 
-        public InputHandler(RLKeyboard keyboard,World world, RLConsole unitConsole,
+        public InputHandler(RLKeyboard keyboard,World world,
             (int width, int height) viewport,string configName="/settings.json")
         {
             string file = null;
@@ -66,7 +75,6 @@ namespace CivSharp.Systems
                 {"CameraRight","d" },
                 {"CameraUp","w" },
                 {"CameraDown","s" },
-                {"MoveToCursor","c" },
                 {"CursorLeft","left" },
                 {"CursorRight","right" },
                 {"CursorUp","up" },
@@ -100,8 +108,7 @@ namespace CivSharp.Systems
             }
             
             _camera = new Camera(world, this, 0, 0, viewport.width, viewport.height);
-            _cursor = new Cursor(world, this, unitConsole, 0, 0,viewport.width,viewport.height );
-            _moveCamera = new MoveCameraToCursor(this, _camera, _cursor,world);
+            _cursor = new Cursor(world, this, 0, 0,viewport.width,viewport.height );
         }
 
         private InputComands ConvertToInputCommands(string s)
@@ -118,15 +125,13 @@ namespace CivSharp.Systems
                 case "CursorRight": return InputComands.CursorRight;
                 case "Enter": return InputComands.Enter;
                 case "Esc": return InputComands.Esc;
-                case "MoveToCursor": return InputComands.MoveToCursor;
                 default: return InputComands.Esc;
             }
         }
 
-        public void Update(RLConsole unitConsole)
+        public void Update()
         {
             var keys = _keyboard.GetKeyPress();
-            _cursor.Update(unitConsole);
             
             if (keys != null)
             {

@@ -12,6 +12,10 @@ using RogueSharp;
 namespace CivSharp.Core
 {
 #nullable enable
+    class Resource
+    {
+
+    }
 
     class Tile : IDrawable
     {

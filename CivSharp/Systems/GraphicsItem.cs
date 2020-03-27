@@ -11,6 +11,12 @@ namespace CivSharp.Systems
         Nothing = 0,
         Plains = 1,
         Mountains = 2,
-        Ocean = 3
+        Ocean = 3,
+        Hills = 4,
+        Forest = 5,
+        Dessert = 6,
+        Marsh = 7,
+        Coast = 8,
+        Tundra = 9
     }
 }

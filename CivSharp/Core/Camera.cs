@@ -1,5 +1,4 @@
 ﻿using System;
-using CivSharp.Core.Input;
 using CivSharp.Systems;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
@@ -7,7 +6,7 @@ using RLNET;
 
 namespace CivSharp.Core
 {
-    class Camera : InputSystem
+    class Camera
     {
 
         public int X { get; set; }
@@ -18,20 +17,14 @@ namespace CivSharp.Core
 
         private World _world;
 
-        public Camera(World world, InputHandler inputHandler, int x, int y, int xSize, int ySize) : base(inputHandler)
+        public Camera(World world, InputHandler inputHandler, int x, int y, int xSize, int ySize)
         {
             X = x;
             Y = y;
             XSize = xSize;
             YSize = ySize;
             _world = world;
-        }
-        public void MoveTo(int x, int y)
-        {
-            X = x;
-            Y = y;
-            Game.CameraX = X;
-            Game.CameraY = Y;
+            inputHandler.HandleInputEvent += OnKeyPress;
         }
 
         private (int x, int y) GetMove(InputComands command) =>
@@ -44,7 +37,7 @@ namespace CivSharp.Core
                 _ => (X, Y)
             };
 
-        protected override void OnInputEvent(object sender, InputEvent e)
+        private void OnKeyPress(object sender, InputEvent e)
         {
             GetMove(e.Command);
             Game.CameraX = X;
