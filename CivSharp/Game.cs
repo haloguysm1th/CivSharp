@@ -47,11 +47,14 @@ namespace CivSharp
         #endregion
         #region Local variables
         private static World world;
-        private static Camera _camera;
+        private static InputHandler _inputHandler;
 
         private static bool fullScreen = false;
-        private static int _cameraX = 0;
-        private static int _cameraY= 0;
+        #endregion
+
+        #region Public Variables
+        public static int CameraX = 0;
+        public static int CameraY = 0;  
         #endregion
         static void Main(string[] args)
         {
@@ -85,23 +88,14 @@ namespace CivSharp
             var generator=  new WorldGenerator(_mapWidth, _mapHeight);
             world = generator.GenerateWorld();
 
-            //Pass render height/width because we add them as offsets.
-            _camera = new Camera(world,0,0,_mapRenderWidth,_mapRenderHeight);
+            _inputHandler = new InputHandler(_rootConsole.Keyboard,world,
+                (_mapRenderWidth, _mapRenderHeight));
 
+            //Pass render height/width because we add them as offsets.
             _rootConsole.Update += OnRootConsoleUpdate;
             _rootConsole.Render += OnRootConsoleRender;
             _rootConsole.Run();
         }
-        #region Private Methodws
-
-        private static void MoveCamera()
-        {
-            var cameraMove = _camera.Move(_rootConsole.Keyboard);
-            _cameraX = cameraMove.X;
-            _cameraY = cameraMove.Y;
-        }
-
-        #endregion
 
         #region Rendering and Updating
         private static void OnRootConsoleUpdate(object sender, UpdateEventArgs e)
@@ -110,7 +104,7 @@ namespace CivSharp
             _mapConsole.Clear();
             _unitConsole.Clear();
 
-            MoveCamera();
+            _inputHandler.Update();
 
             _commandConsole.SetBackColor(0,0,_commandWidth,_commandHeight,RLColor.Cyan);
             _commandConsole.Print(1, 1, "Commands!",RLColor.White);
@@ -127,7 +121,7 @@ namespace CivSharp
             world.Draw(_mapConsole);
 
             //Put all the consoles into the rootConsole
-            RLConsole.Blit(_mapConsole,_cameraX,_cameraY,_mapRenderWidth,_mapRenderHeight,
+            RLConsole.Blit(_mapConsole,CameraX,CameraY,_mapRenderWidth,_mapRenderHeight,
                 _rootConsole,_unitWidth,_commandHeight);
             RLConsole.Blit(_unitConsole,0,0,_unitWidth,_unitHeight,
                 _rootConsole,0,0);

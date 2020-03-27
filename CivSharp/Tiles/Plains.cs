@@ -13,7 +13,8 @@ namespace CivSharp.Tiles
     class Plains : Tile
     {
         public Plains(int x, int y, ICell cell) : 
-            base(x, y, GraphicsItem.Plains, Colors.GrassPrimiary,Colors.GrassSecondary , cell)
+            base(x, y, false, true, 0, 0, 0, null,
+                GraphicsItem.Plains, Colors.GrassPrimiary,Colors.GrassSecondary , cell)
         {
         }
     }

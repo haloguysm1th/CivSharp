@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="Core\Camera.cs" />
     <Compile Include="Core\Civilization.cs" />
+    <Compile Include="Core\Cursor.cs" />
     <Compile Include="Core\Tile.cs" />
     <Compile Include="Interfaces\IUnit.cs" />
     <Compile Include="Core\Worker.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Interfaces\IDrawable.cs" />
     <Compile Include="Systems\Colors.cs" />
     <Compile Include="Systems\GraphicsItem.cs" />
+    <Compile Include="Systems\InputHandler.cs" />
     <Compile Include="Systems\WorldGenerator.cs" />
     <Compile Include="Tiles\Mountain.cs" />
     <Compile Include="Tiles\Ocean.cs" />

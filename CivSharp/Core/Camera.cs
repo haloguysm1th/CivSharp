@@ -1,4 +1,7 @@
-﻿using OpenTK.Input;
+﻿using System;
+using CivSharp.Systems;
+using OpenTK.Graphics.OpenGL;
+using OpenTK.Input;
 using RLNET;
 
 namespace CivSharp.Core
@@ -14,35 +17,31 @@ namespace CivSharp.Core
 
         private World _world;
 
-        public Camera(World world, int x, int y, int xSize, int ySize)
+        public Camera(World world, InputHandler inputHandler, int x, int y, int xSize, int ySize)
         {
             X = x;
             Y = y;
             XSize = xSize;
             YSize = ySize;
             _world = world;
+            inputHandler.HandleInputEvent += OnKeyPress;
         }
 
-        private (int x, int y) GetMove(RLKey key) =>
-            key switch
+        private (int x, int y) GetMove(InputComands command) =>
+            command switch
             {
-                RLKey.W  when Y > 0 => (X, Y--),
-                RLKey.S  when Y + YSize < _world.Height => (X, Y++),
-                RLKey.A when X > 0 => (X--, Y),
-                RLKey.D when X + XSize < _world.Width => (X++, Y),
-                _ => (X,Y)
+                InputComands.CameraUp when Y > 0 => (X, Y--),
+                InputComands.CameraDown when Y + YSize < _world.Height => (X, Y++),
+                InputComands.CameraLeft when X > 0 => (X--, Y),
+                InputComands.CameraRight when X + XSize < _world.Width => (X++, Y),
+                _ => (X, Y)
             };
-        
-        public (int X, int Y) Move(RLKeyboard keyboard)
+
+        private void OnKeyPress(object sender, InputEvent e)
         {
-            var keys = keyboard.GetKeyPress();
-
-            if (keys != null)
-            {
-                return GetMove(keys.Key);
-            }
-
-            return (X, Y);
+            GetMove(e.Command);
+            Game.CameraX = X;
+            Game.CameraY = Y;
         }
     }
 }
