@@ -57,19 +57,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\Camera.cs" />
     <Compile Include="Core\Civilization.cs" />
-    <Compile Include="Core\Cursor.cs" />
+    <Compile Include="Core\Input\Camera.cs" />
+    <Compile Include="Core\Input\Cursor.cs" />
+    <Compile Include="Core\Input\InputSystem.cs" />
+    <Compile Include="Core\Input\MoveCameraToCursor.cs" />
+    <Compile Include="Core\Resource.cs" />
     <Compile Include="Core\Tile.cs" />
-    <Compile Include="Interfaces\IUnit.cs" />
     <Compile Include="Core\Worker.cs" />
     <Compile Include="Core\World.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Interfaces\IAbility.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Interfaces\IDrawable.cs" />
+    <Compile Include="Interfaces\IUnit.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Systems\Colors.cs" />
     <Compile Include="Systems\GraphicsItem.cs" />
+    <Compile Include="Systems\InputEvent.cs" />
     <Compile Include="Systems\InputHandler.cs" />
     <Compile Include="Systems\WorldGenerator.cs" />
     <Compile Include="Tiles\Coast.cs" />
@@ -92,5 +96,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

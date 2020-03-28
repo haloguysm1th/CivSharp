@@ -10,5 +10,6 @@ namespace CivSharp.Core
     class Civilization
     {
         List<IUnit> Units;
+
     }
 }

@@ -11,9 +11,11 @@ namespace CivSharp.Core
     class World : Map
     {
         public Tile[,] Tiles { get; private set; }
+        public List<Rectangle> Islands { get; set; }
 
         public World()
         {
+            Islands = new List<Rectangle>();
         }
 
         public new void Initialize(int width, int height)
@@ -41,6 +43,21 @@ namespace CivSharp.Core
             return tiles;
         }
 
+        public IEnumerable<Tile> GetBoarderTilesOfRectangle(int left, int right, int top, int bottom, int depth)
+        {
+            var tiles = GetTilesAlongLine(left, top, right, top).ToList();
+            tiles.AddRange(GetTilesAlongLine(left, bottom, right, bottom));
+            tiles.AddRange(GetTilesAlongLine(left, bottom, left, top));
+            tiles.AddRange(GetTilesAlongLine(right, top, right, top));
+
+            if (depth > 0)
+            {
+                tiles.AddRange(GetBoarderTilesOfRectangle(left + 1, right - 1, top - 1, bottom - 1, depth - 1));
+            }
+
+            return tiles;
+        }
+
         public IEnumerable<Tile> ConvertCellsToTiles(IEnumerable<ICell> cells)
         {
             var listOfTiles = new List<Tile>();
@@ -51,6 +68,23 @@ namespace CivSharp.Core
             }
 
             return listOfTiles;
+        }
+
+        public IEnumerable<Tile> GetTilesInRectangle(Rectangle rect)
+        {
+            var tiles= new List<Tile>();
+            for (int x = rect.Left; x < rect.Right; x++)
+            {
+                for (int y = rect.Top; y < rect.Bottom; y++)
+                {
+                    if (!(x > Width-1 || x < 0 || y > Height-1 || y < 0))
+                    {
+                        tiles.Add(Tiles[y, x]);
+                    }
+                }
+            }
+
+            return tiles;
         }
 
         public IEnumerable<Tile> GetTilesAlongLine(int xStart, int yStart, int xDestination, int yDestination)
