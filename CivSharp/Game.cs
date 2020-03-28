@@ -17,10 +17,10 @@ namespace CivSharp
         private static readonly int _screenWidth = 100;
         private static readonly int _screenHeight = 70;
 
-        
+
         private static readonly int _unitWidth = 20;
         private static readonly int _unitHeight = _screenHeight;
-        
+
         private static readonly int _commandButtonHeight = 10;
         private static readonly int _commandButtonWidth = _screenWidth - _unitWidth;
 
@@ -54,7 +54,7 @@ namespace CivSharp
 
         #region Public Variables
         public static int CameraX = 0;
-        public static int CameraY = 0;  
+        public static int CameraY = 0;
         #endregion
         static void Main(string[] args)
         {
@@ -81,14 +81,14 @@ namespace CivSharp
 
             _rootConsole = new RLRootConsole(settings);
 
-            _mapConsole = new RLConsole(_mapWidth,_mapHeight);
-            _commandConsole = new RLConsole(_commandWidth,_commandHeight);
-            _unitConsole = new RLConsole(_unitWidth,_unitHeight);
+            _mapConsole = new RLConsole(_mapWidth, _mapHeight);
+            _commandConsole = new RLConsole(_commandWidth, _commandHeight);
+            _unitConsole = new RLConsole(_unitWidth, _unitHeight);
 
-            var generator=  new WorldGenerator(_mapWidth, _mapHeight);
-            world = generator.GenerateWorld();
+            var generator = new WorldGenerator(_mapWidth, _mapHeight);
+            world = generator.GenerateWorldNew();
 
-            _inputHandler = new InputHandler(_rootConsole.Keyboard,world,
+            _inputHandler = new InputHandler(_rootConsole.Keyboard, world, _unitConsole,
                 (_mapRenderWidth, _mapRenderHeight));
 
             //Pass render height/width because we add them as offsets.
@@ -104,13 +104,10 @@ namespace CivSharp
             _mapConsole.Clear();
             _unitConsole.Clear();
 
-            _inputHandler.Update();
+            _inputHandler.Update(_unitConsole);
 
-            _commandConsole.SetBackColor(0,0,_commandWidth,_commandHeight,RLColor.Cyan);
-            _commandConsole.Print(1, 1, "Commands!",RLColor.White);
-
-            _unitConsole.SetBackColor(0,0,_unitWidth,_unitHeight,RLColor.Magenta);
-            _unitConsole.Print(1, 1, "Units!",RLColor.White);
+            _commandConsole.SetBackColor(0, 0, _commandWidth, _commandHeight, RLColor.Cyan);
+            _commandConsole.Print(1, 1, "Commands!", RLColor.White);
 
             world.Update();
         }
@@ -121,12 +118,12 @@ namespace CivSharp
             world.Draw(_mapConsole);
 
             //Put all the consoles into the rootConsole
-            RLConsole.Blit(_mapConsole,CameraX,CameraY,_mapRenderWidth,_mapRenderHeight,
-                _rootConsole,_unitWidth,_commandHeight);
-            RLConsole.Blit(_unitConsole,0,0,_unitWidth,_unitHeight,
-                _rootConsole,0,0);
-            RLConsole.Blit(_commandConsole,0,0,_commandWidth,_commandHeight,
-                _rootConsole,_unitWidth,0);
+            RLConsole.Blit(_mapConsole, CameraX, CameraY, _mapRenderWidth, _mapRenderHeight,
+                _rootConsole, _unitWidth, _commandHeight);
+            RLConsole.Blit(_unitConsole, 0, 0, _unitWidth, _unitHeight,
+                _rootConsole, 0, 0);
+            RLConsole.Blit(_commandConsole, 0, 0, _commandWidth, _commandHeight,
+                _rootConsole, _unitWidth, 0);
 
             //Then render the root console (and thus all the other ones)
             _rootConsole.Draw();
